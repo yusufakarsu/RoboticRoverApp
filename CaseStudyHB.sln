@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseStudyHB", "CaseStudyHB\CaseStudyHB.csproj", "{FFE4A2AA-66BF-4BCD-84F3-82673799D78F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboticRover.Global", "RoboticRover.Global\RoboticRover.Global.csproj", "{3BD2A8B7-56AC-49F3-B68E-0F67331126AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboticRover.Data", "RoboticRover.Data\RoboticRover.Data.csproj", "{FB58E4E1-45B3-42EE-B17F-1ECAF0B57B57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboticRover.Business", "RoboticRover.Business\RoboticRover.Business.csproj", "{B2FC30FD-4FF6-465E-816C-6B64D7CD78E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboticRover.App", "RoboticRover.Console\RoboticRover.App.csproj", "{CA4CD87C-E6C3-46FC-9103-6ECDB6602741}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboticRover.UnitTest", "RoboticRover.UnitTest\RoboticRover.UnitTest.csproj", "{DF798DCF-221E-4678-99CB-F135D2760E8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +19,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FFE4A2AA-66BF-4BCD-84F3-82673799D78F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFE4A2AA-66BF-4BCD-84F3-82673799D78F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFE4A2AA-66BF-4BCD-84F3-82673799D78F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFE4A2AA-66BF-4BCD-84F3-82673799D78F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BD2A8B7-56AC-49F3-B68E-0F67331126AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BD2A8B7-56AC-49F3-B68E-0F67331126AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BD2A8B7-56AC-49F3-B68E-0F67331126AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BD2A8B7-56AC-49F3-B68E-0F67331126AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB58E4E1-45B3-42EE-B17F-1ECAF0B57B57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB58E4E1-45B3-42EE-B17F-1ECAF0B57B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB58E4E1-45B3-42EE-B17F-1ECAF0B57B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB58E4E1-45B3-42EE-B17F-1ECAF0B57B57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2FC30FD-4FF6-465E-816C-6B64D7CD78E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2FC30FD-4FF6-465E-816C-6B64D7CD78E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2FC30FD-4FF6-465E-816C-6B64D7CD78E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2FC30FD-4FF6-465E-816C-6B64D7CD78E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA4CD87C-E6C3-46FC-9103-6ECDB6602741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA4CD87C-E6C3-46FC-9103-6ECDB6602741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA4CD87C-E6C3-46FC-9103-6ECDB6602741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA4CD87C-E6C3-46FC-9103-6ECDB6602741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF798DCF-221E-4678-99CB-F135D2760E8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF798DCF-221E-4678-99CB-F135D2760E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF798DCF-221E-4678-99CB-F135D2760E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF798DCF-221E-4678-99CB-F135D2760E8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
