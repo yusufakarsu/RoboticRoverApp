@@ -12,5 +12,7 @@ namespace RoboticRover.Data.Interfaces
     {
         RoverRobotAndMovements GetData(int defaultValue = 1);
         List<RoverRobotAndMovements> GetListData();
+        OccurenceOfErrorPositions GetOccurenceOfErrorList();
+        void SetOccurenceOfError(Position position);
     }
 }

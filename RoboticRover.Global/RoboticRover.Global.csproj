@@ -46,12 +46,14 @@
   <ItemGroup>
     <Compile Include="Enums\Directions.cs" />
     <Compile Include="Enums\Rotations.cs" />
+    <Compile Include="Models\MoveResult.cs" />
     <Compile Include="Models\RoverOperationResult.cs" />
     <Compile Include="Models\RoverRobotAndMovements.cs" />
     <Compile Include="Models\Movement.cs" />
     <Compile Include="Models\Plateu.cs" />
     <Compile Include="Models\Position.cs" />
     <Compile Include="Models\RoverRobot.cs" />
+    <Compile Include="Models\OccurenceOfErrorPositions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

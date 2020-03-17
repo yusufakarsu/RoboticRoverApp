@@ -27,6 +27,7 @@ namespace RoboticRover.App
                         Console.WriteLine($"Rover Robot Landed SurfaceLength are : {result.RoverRobotAndMovements.RoverRobot.LandedPlateu.XSurfaceLength} {result.RoverRobotAndMovements.RoverRobot.LandedPlateu.YSurfaceLength} And it's Facing Direction is {result.RoverRobotAndMovements.RoverRobot.FacingDirection.ToString()}");
                         Console.WriteLine($"Rover Robot Positions are : {result.RoverRobotAndMovements.RoverRobot.Position.CoordinateX} {result.RoverRobotAndMovements.RoverRobot.Position.CoordinateY} And it's Facing Direction is {result.RoverRobotAndMovements.RoverRobot.FacingDirection.ToString()}");
                         Console.WriteLine($"Rover Robot Movements are : {string.Join("", result.RoverRobotAndMovements.Movements.Select(x => string.Concat(Enumerable.Repeat(x.Rotation.ToString(), x.Count))).ToList())}");
+                        Console.WriteLine($"Skipped Old Occurenced Error Coordinates are : {string.Join(" | ", result.SkippedPositions.Select(x => $"({x.CoordinateX} {x.CoordinateY})"))}");
                         Console.WriteLine($" After the Rover Operation; Rover Robot Robot Positions are {result.RoverRobotAndMovements.RoverRobot.Position.CoordinateX} {result.RoverRobotAndMovements.RoverRobot.Position.CoordinateY} {result.RoverRobotAndMovements.RoverRobot.FacingDirection.ToString()}");
                         Console.WriteLine("");
                     }

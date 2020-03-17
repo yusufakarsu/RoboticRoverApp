@@ -14,9 +14,11 @@ namespace RoboticRover.Data.Repositories
 {
     public class RoboticRoverData : IRoboticRoverData
     {
+
+        #region Get
         public RoverRobotAndMovements GetData(int defaultValue = 0)
         {
-            var filePath = Path.GetFullPath(System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString()  + @ConfigurationHelper.DataPath);
+            var filePath = Path.GetFullPath(System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString() + @ConfigurationHelper.DataPath);
             var robotProps = GetJRobotData(filePath);
             var roverRobotAndMovements = new RoverRobotAndMovements();
 
@@ -33,6 +35,7 @@ namespace RoboticRover.Data.Repositories
         public List<RoverRobotAndMovements> GetListData()
         {
             var filePath = Path.GetFullPath(System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString() + @ConfigurationHelper.DataPath);
+
             var robotProps = GetJRobotData(filePath);
             var listData = new List<RoverRobotAndMovements>();
 
@@ -41,6 +44,37 @@ namespace RoboticRover.Data.Repositories
 
             return listData;
         }
+
+        public OccurenceOfErrorPositions GetOccurenceOfErrorList()
+        {
+            var filePath = Path.GetFullPath(System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString() + @ConfigurationHelper.DataPath);
+            var OccurenceOfErrorPositions = GetJRobotData(filePath);
+            var listData = new OccurenceOfErrorPositions();
+
+            if (OccurenceOfErrorPositions != null)
+                listData = MapOccurenceOfErrorPositions(OccurenceOfErrorPositions);
+
+            return listData;
+        }
+        #endregion
+
+        #region Set
+        public void SetOccurenceOfError(Position position)
+        {
+            var filePath = Path.GetFullPath(System.IO.Directory.GetParent(System.IO.Directory.GetParent(System.IO.Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString() + @ConfigurationHelper.DataPath);
+            var jData = GetJRobotData(filePath);
+            if (jData["OccurenceOfErrorPositions"] != null)
+            {
+                JArray items = (JArray)jData["OccurenceOfErrorPositions"];
+                items.Add($"{position.CoordinateX} {position.CoordinateY}");
+                string output = Newtonsoft.Json.JsonConvert.SerializeObject(jData, Newtonsoft.Json.Formatting.Indented);
+                File.WriteAllText(filePath, output);
+            }
+
+        }
+        #endregion Set
+
+        #region Mapping
         private List<RoverRobotAndMovements> MapRoverRobotListData(JObject jsonObj)
         {
             var strPlateuSurfaces = string.Empty;
@@ -124,6 +158,38 @@ namespace RoboticRover.Data.Repositories
             }
             return roverRobotAndMovementsList;
         }
+
+        private OccurenceOfErrorPositions MapOccurenceOfErrorPositions(JObject jsonObj)
+        {
+            var strpositions = string.Empty;
+            var occurenceOfErrorPositions = new OccurenceOfErrorPositions() {Positions = new List<Position>()};
+
+            if (jsonObj["OccurenceOfErrorPositions"] != null)
+            {
+                var inputs = jsonObj["OccurenceOfErrorPositions"].ToList();
+
+                foreach (var item in inputs)
+                {
+                    var strFailurePositions = item.ToString();
+
+                    var strFailurePositionList = strFailurePositions.Trim().Split(' ');
+                    if (strFailurePositionList != null && strFailurePositionList.Any() && strFailurePositionList.Count() == 2)
+                    {
+                        var failureposition = new Position
+                        {
+                            CoordinateX = Convert.ToInt32(strFailurePositionList[0]),
+                            CoordinateY = Convert.ToInt32(strFailurePositionList[1])
+                        };
+                        occurenceOfErrorPositions.Positions.Add(failureposition);
+                    }
+                }
+            }
+
+            return occurenceOfErrorPositions;
+            
+        }
+        #endregion Mapping
+
         private JObject GetJRobotData(string path)
         {
             var resultObject = new JObject();
@@ -138,5 +204,6 @@ namespace RoboticRover.Data.Repositories
             }
             return resultObject;
         }
+        
     }
 }

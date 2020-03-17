@@ -15,6 +15,7 @@ namespace RoboticRover.Business.Business
     {
         private readonly Lazy<RoboticRoverData> _data;
 
+        private Random random = new Random();
 
         public RoboticRoverBusiness()
         {
@@ -23,17 +24,22 @@ namespace RoboticRover.Business.Business
 
         public RoverOperationResult OperateRoverRobotFromJsonData(RoverRobotAndMovements roverRobotAndMovements)
         {
-            var resultObj = new RoverOperationResult();
+            var resultObj = new RoverOperationResult { SkippedPositions = new List<Position>() };
             try
             {
                 if (roverRobotAndMovements != null && roverRobotAndMovements.Movements != null && roverRobotAndMovements.Movements.Any() && roverRobotAndMovements.RoverRobot != null)
                 {
+                    MoveResult moveResult = null;
+
                     foreach (var movement in roverRobotAndMovements.Movements)
                     {
+                        moveResult = null;
                         switch (movement.Rotation)
                         {
                             case Rotations.M:
-                                roverRobotAndMovements.RoverRobot.Position = MoveForward(roverRobotAndMovements.RoverRobot.Position, roverRobotAndMovements.RoverRobot.FacingDirection, movement.Count);
+                                moveResult = MoveForward(roverRobotAndMovements.RoverRobot.Position, roverRobotAndMovements.RoverRobot.FacingDirection, movement.Count);
+                                if(moveResult != null)
+                                    roverRobotAndMovements.RoverRobot.Position = moveResult.Position;
                                 break;
                             case Rotations.L:
                                 roverRobotAndMovements.RoverRobot.FacingDirection = RotateLeft(roverRobotAndMovements.RoverRobot.FacingDirection);
@@ -47,7 +53,20 @@ namespace RoboticRover.Business.Business
                                 break;
                         }
 
-                        if (roverRobotAndMovements.RoverRobot.Position.CoordinateX < 0 || roverRobotAndMovements.RoverRobot.Position.CoordinateX > roverRobotAndMovements.RoverRobot.LandedPlateu.XSurfaceLength || roverRobotAndMovements.RoverRobot.Position.CoordinateY < 0 || roverRobotAndMovements.RoverRobot.Position.CoordinateY > roverRobotAndMovements.RoverRobot.LandedPlateu.YSurfaceLength)
+                        if (moveResult != null && moveResult.Result && moveResult.isSkipped)
+                        {
+                            resultObj.Result = 1;
+                            resultObj.SkippedPositions.Add(moveResult.skippedPosition);
+                            resultObj.ResultMessage += $"\n !!! Skipped Old Occurenced Error Coordinates ({moveResult.skippedPosition.CoordinateX} , {moveResult.skippedPosition.CoordinateY})";
+
+                        }
+                        else if (moveResult != null && !moveResult.Result)
+                        {
+                            resultObj.Result = -1;
+                            resultObj.ResultMessage += $"\n !!! An error occured while the robot was moving On ({roverRobotAndMovements.RoverRobot.Position.CoordinateX} , {roverRobotAndMovements.RoverRobot.Position.CoordinateY}) Coordinates";
+                            break;
+                        }
+                        else if (roverRobotAndMovements.RoverRobot.Position.CoordinateX < 0 || roverRobotAndMovements.RoverRobot.Position.CoordinateX > roverRobotAndMovements.RoverRobot.LandedPlateu.XSurfaceLength || roverRobotAndMovements.RoverRobot.Position.CoordinateY < 0 || roverRobotAndMovements.RoverRobot.Position.CoordinateY > roverRobotAndMovements.RoverRobot.LandedPlateu.YSurfaceLength)
                         {
                             resultObj.Result = -1;
                             resultObj.ResultMessage = $"!!! Position exceeded plateau limits (0 , 0) and ({roverRobotAndMovements.RoverRobot.LandedPlateu.XSurfaceLength} , {roverRobotAndMovements.RoverRobot.LandedPlateu.YSurfaceLength})";
@@ -64,7 +83,7 @@ namespace RoboticRover.Business.Business
                 if (resultObj.Result != -1)
                 {
                     resultObj.Result = 1;
-                    resultObj.ResultMessage = "Succes";
+                    resultObj.ResultMessage += "\n Succes";
                     resultObj.RoverRobotAndMovements = roverRobotAndMovements;
                 }
             }
@@ -87,28 +106,80 @@ namespace RoboticRover.Business.Business
             return roverRobotAndMovements;
         }
 
+        // Yeni Logic için bu kullanım kaldırıldı
+        //private Position MoveForward(Position position, Directions facingDirection, int Count)
+        //{
 
-        private Position MoveForward(Position position, Directions facingDirection, int Count)
+        //    switch (facingDirection)
+        //    {
+        //        case Directions.N:
+        //            position.CoordinateY += Count;
+        //            break;
+        //        case Directions.S:
+        //            position.CoordinateY -= Count;
+        //            break;
+        //        case Directions.E:
+        //            position.CoordinateX += Count;
+        //            break;
+        //        case Directions.W:
+        //            position.CoordinateX -= Count;
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    return position;
+        //}
+
+        private MoveResult MoveForward(Position position, Directions facingDirection, int MovementCount)
         {
-            switch (facingDirection)
+
+            var result = new MoveResult { MovementStep = 0, Position = position, Result = true, isSkipped = false, skippedPosition = null };
+            while (MovementCount > 0 && result.Result)
             {
-                case Directions.N:
-                    position.CoordinateY += Count;
+                MovementCount--;
+                result.MovementStep++;
+
+                switch (facingDirection)
+                {
+                    case Directions.N:
+                        result.Position.CoordinateY++;
+                        break;
+                    case Directions.S:
+                        result.Position.CoordinateY--;
+                        break;
+                    case Directions.E:
+                        result.Position.CoordinateX++;
+                        break;
+                    case Directions.W:
+                        result.Position.CoordinateX--;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (CheckOldOccurenceOfErrors(result.Position))
+                {
+                    result.skippedPosition = result.Position;
+                    result.isSkipped = true;
+                    result.Result = true;
                     break;
-                case Directions.S:
-                    position.CoordinateY -= Count;
-                    break;
-                case Directions.E:
-                    position.CoordinateX += Count;
-                    break;
-                case Directions.W:
-                    position.CoordinateX -= Count;
-                    break;
-                default:
-                    break;
+                }
+
+                if (!result.isSkipped)
+                {
+                    result.Result = checkErrorOccurence();
+                }
+
             }
-            return position;
+
+            if (!result.Result)
+            {
+                _data.Value.SetOccurenceOfError(result.Position);
+            }
+            return result;
         }
+
+
         private Directions RotateLeft(Directions facingDirection)
         {
             switch (facingDirection)
@@ -153,5 +224,27 @@ namespace RoboticRover.Business.Business
             return facingDirection;
         }
 
+        private bool checkErrorOccurence()
+        {
+            return (random.Next(0, 100) % 7 != 0);
+        }
+
+        private bool CheckOldOccurenceOfErrors(Position position)
+        {
+            var oldErrorOccurences = _data.Value.GetOccurenceOfErrorList();
+            var result = false;
+            if (oldErrorOccurences != null && oldErrorOccurences.Positions != null && oldErrorOccurences.Positions.Any())
+            {
+                foreach (var item in oldErrorOccurences.Positions)
+                {
+                    if (item.CoordinateX == position.CoordinateX && item.CoordinateY == position.CoordinateY)
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace RoboticRover.Global.Models
     public class RoverOperationResult
     {
         public RoverRobotAndMovements RoverRobotAndMovements { get; set; }
+        public List<Position> SkippedPositions { get; set; }
         public int Result { get; set; }
         public string ResultMessage { get; set; }
     }
